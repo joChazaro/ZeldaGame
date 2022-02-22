@@ -25,94 +25,10 @@ import javax.sound.sampled.Clip ;
 
 // go until pg 119 playerMover
 public class Zelda {
-    private static Boolean endgame ;
-	private static Vector< Vector< BufferedImage > > backgroundKI ;
-	private static Vector< Vector< BufferedImage > > backgroundTC ;
-	private static Vector< Vector< Vector< ImageObject > > > wallsKI ;
-	private static Vector< Vector< Vector< ImageObject > > > wallsTC ;
-	private static int xdimKI ;
-	private static int ydimKI ;
-	private static int xdimTC ;
-	private static int ydimTC ;
-	private static BufferedImage player ;
-	private static Vector< BufferedImage > link ;
-	private static BufferedImage leftHeartOutline;
-	private static BufferedImage rightHeartOutline;
-	private static BufferedImage leftHeart;
-	private static BufferedImage rightHeart ;
-	private static Vector< BufferedImage > bluepigEnemy ;
-	private static Vector<ImageObject> bluepigEnemies ;
-	private static Vector<ImageObject> bubblebossEnemies ;
-	private static ImageObject doorKItoTC ;
-	private static ImageObject doorTCtoKI ;
-	private static Boolean upPressed ;
-	private static Boolean downPressed ;
-	private static Boolean leftPressed ;
-	private static Boolean rightPressed ;
-	private static Boolean aPressed ;
-	private static Boolean xPressed ;
-	private static double lastPressed ;
-	private static ImageObject p1 ;
-	private static double p1width ;
-	private static double p1height ;
-	private static double p1originalX ;
-	private static double p1originalY ;
-	private static double p1velocity ;
-	private static int level ;
-	private static Long audiolifetime ;
-	private static Long lastAudioStart ;
-	private static Clip clip ;
-	private static Long dropLifeLifetime ;
-	private static Long lastDropLife ;
-	private static int XOFFSET;
-	private static int YOFFSET;
-	private static int WINWIDTH;
-	private static int WINHEIGHT;
-	private static double pi ;
-	private static double quarterPi ;
-	private static double halfPi;
-	private static double threequartersPi ;
-	private static double fivequartersPi;
-	private static double threehalvesPi;
-	private static double sevenquartersPi;
-	private static double twoPi;
-	private static JFrame appFrame ;
-	private static String backgroundState ;
-	private static Boolean availableToDropLife;
-	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-    
 	public Zelda() {
 		setup();
 	}
-	public static void main(String[] args){
-		setup();
-		appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		appFrame.setSize(WINWIDTH+1, WINHEIGHT+85);
-
-		JPanel myPanel = new JPanel();
-
-		JButton quitButton = new JButton("Select");
-		quitButton.addActionListener(new QuitGame());
-		myPanel.add(quitButton);
-
-		JButton newGameButton = new JButton("Start");
-		newGameButton.addActionListener(new StartGame());
-
-		JButton quitButton = new JButton ("Quit_Game");
-		quitButton.addActionListener(new QuitGame());
-		myPanel.add(quitButton);
-
-		bindKey(myPanel, "UP");
-		bindKey(myPanel,"DOWN");
-		bindKey(myPanel, "LEFT");
-		bindKey(myPanel, "RIGHT");
-		bindKey(myPanel, "F");
-		appFrame.getContentPane().add(myPanel, "South");
-		appFrame.setVisible(true);
-	}
 	
-
-
 	public static void setup(){
 		appFrame = new JFrame("The Legend of Zelda: Link's Awakening");
 		XOFFSET = 0;
@@ -286,193 +202,196 @@ public class Zelda {
 
             } // left off on page 115
     }
-		private static class Animate implements Runnable{
-			public void run(){
-				while(endgame == false){
-					backgroundDraw();
-					enemiesDraw();
-					playerDraw();
-					healthDraw();
 
-					try{
-						Thread.sleep(32);
-					}
-					catch(InterruptedException e) {
+	private static class Animate implements Runnable{
+		public void run(){
+			while(endgame == false){
+				backgroundDraw();
+				enemiesDraw();
+				playerDraw();
+				healthDraw();
 
-					}
+				try{
+					Thread.sleep(32);
+				}
+				catch(InterruptedException e) {
+
 				}
 			}
 		}
-		private static class AudioLooper implements Runnable{
-			public void run(){
-				while(endgame == false) {
-					Long curTime = new Long(System.currentTimeMillis());
-					if(curTime - lastAudioStart > audiolifetime) {
-						playAudio(backgroundState);
-					}
+	}
+
+	private static class AudioLooper implements Runnable{
+		public void run(){
+			while(endgame == false) {
+				Long curTime = new Long(System.currentTimeMillis());
+				if(curTime - lastAudioStart > audiolifetime) {
+					playAudio(backgroundState);
 				}
 			}
 		}
-		private static void playAudio(String backgroundState){
-			try{
-				clip.stop();
-			}
-			catch(Exception e){
-				//NOP
-			}
-			try{
-				if(backgroundState.startsWith("KI")){
-					AudioInputStream ais = AudioSystem.getAudioInputStream(new File("KI.wav").getAbsoluteFile());
-					clip = AudioSystem.getClip();
-					clip.open(ais);
-					clip.start();
-					lastAudioStart = System.currentTimeMillis();
+	}
 
-				}
-				else if(backgroundState.startsWith("TC")) {
-					AudioInputStream ais = AudioSystem.getAudioInputStream(new File("TC.wav").getAbsoluteFile());
-					clip = AudioSystem.getClip();
-					clip.open(ais);
-					clip.start();
-					lastAudioStart = System.currentTimeMillis();
-					audiolifetime = new Long(191000);
+	private static void playAudio(String backgroundState){
+		try{
+			clip.stop();
+		}
+		catch(Exception e){
+			//NOP
+		}
+		try{
+			if(backgroundState.startsWith("KI")){
+				AudioInputStream ais = AudioSystem.getAudioInputStream(new File("KI.wav").getAbsoluteFile());
+				clip = AudioSystem.getClip();
+				clip.open(ais);
+				clip.start();
+				lastAudioStart = System.currentTimeMillis();
 
-				}
 			}
-			catch(Exception e) {
-				//NOP
+			else if(backgroundState.startsWith("TC")) {
+				AudioInputStream ais = AudioSystem.getAudioInputStream(new File("TC.wav").getAbsoluteFile());
+				clip = AudioSystem.getClip();
+				clip.open(ais);
+				clip.start();
+				lastAudioStart = System.currentTimeMillis();
+				audiolifetime = new Long(191000);
+
 			}
 		}
-		private static String bgWrap(String input, int wrap){
-			String ret = input;
-			if (wrap == 0){
-				//NOP
-			}
-			else if (wrap == 1) {
-				int xcoord = Integer.parseInt(Input.substring(2,4));
-				int ycoord = Integer.parseInt(input.substring(4,6));
-
-				xcoord = xcoord + 1;
-				if(xcoord < 10){
-					ret = input.substring(0, 2) + "0" + xcoord;
-
-				}
-				else {
-					ret = input.substring(0, 2) + xcoord;
-				}
-				if(ycoord < 10){
-					ret = ret + "0" + ycoord;
-				}
-				else {
-					ret = ret + ycoord;
-				}
-			}
-			else if(wrap == 2) { //left
-				int xcoord = Integer.parseInt(input.substring(2, 4));
-				int ycoord = Integer.parseInt(input.substring(4,6));
-
-				xcoord = xcoord - 1;
-
-				if(xcoord < 10){
-					ret = input.substring(0,2) + "0" + xcoord;
-				}
-				else {
-					ret = input.substring(0, 2) + xcoord;
-				}
-				if( ycoord < 10) {
-					ret = ret + "0" + ycoord;
-				} else{
-					ret = ret + ycoord;
-				}
-			}
-			else if(wrap == 4) //up
-			{
-				int xcoord = Integer.parseInt(input.substring(2, 4));
-				int ycoord = Integer.parseInt(input.substring(4, 6));
-
-				ycoord = ycoord- 1;
-
-				if(xcoord < 10){
-					ret = input.substring(0, 2) + "0" + xcoord;
-				}
-				else {
-					ret = input.substring(0, 2) + xcoord;
-				}
-				if(ycoord < 10) {
-					ret = ret + "0" + ycoord;
-				}
-				else {
-					ret = ret + ycoord;
-				}
-			}
-			return ret;
+		catch(Exception e) {
+			//NOP
 		}
+	}
 
+	private static String bgWrap(String input, int wrap){
+		String ret = input;
+		if (wrap == 0){
+			//NOP
+		}
+		else if (wrap == 1) {
+			int xcoord = Integer.parseInt(Input.substring(2,4));
+			int ycoord = Integer.parseInt(input.substring(4,6));
 
-// start on psc animate
-		private static void healthDraw() {
-			Graphics g = appFrame.getGraphics();
-			Graphics g2D = g;
+			xcoord = xcoord + 1;
+			if(xcoord < 10){
+				ret = input.substring(0, 2) + "0" + xcoord;
 
-			int leftscale = 10;
-			int leftoffset = 10;
-			int rightoffset = 9;
-			int interioroffset = 2;
-			int halfinterioroffset  = 1;
-
-			for (int i = 0; i < p1.getMaxLife(); i++) {
-				if (i % 2 == 0) {
-					g2D.drawImage(rotateImageObject(p1).filter(leftHeartOutline, null), leftscale * i + leftoffset + XOFFSET, YOFFSET, null);
-				}
-				else {
-					g2D.drawImage(rotateObject(p1).filter(rightHeartOutline, null), leftscale * i + rightoffet + XOFFSET, YOFFSET, null);
-				}
 			}
+			else {
+				ret = input.substring(0, 2) + xcoord;
+			}
+			if(ycoord < 10){
+				ret = ret + "0" + ycoord;
+			}
+			else {
+				ret = ret + ycoord;
+			}
+		}
+		else if(wrap == 2) { //left
+			int xcoord = Integer.parseInt(input.substring(2, 4));
+			int ycoord = Integer.parseInt(input.substring(4,6));
 
-			for (int i = 0; i < p1.getMaxLife(); i++) {
-				if (i % 2 == 0) {
-					g2D . drawImage ( rotateImageObject(p1).filter(leftHeart, null), leftscale * i + leftoffset + interioroffset + XOFFSET, interioroffset + YOFFSET, null ) ;
-				}
-				else {
-					g2D.drawImage(rotateImageObject(p1).filter(rightHeart,null), leftscale * i + leftoffset - halfinterioroffset +
-							XOFFSET, interioroffset + YOFFSET, null ) ;
-				}
+			xcoord = xcoord - 1;
+
+			if(xcoord < 10){
+				ret = input.substring(0,2) + "0" + xcoord;
+			}
+			else {
+				ret = input.substring(0, 2) + xcoord;
+			}
+			if( ycoord < 10) {
+				ret = ret + "0" + ycoord;
+			} else{
+				ret = ret + ycoord;
+			}
+		}
+		else if(wrap == 4) //up
+		{
+			int xcoord = Integer.parseInt(input.substring(2, 4));
+			int ycoord = Integer.parseInt(input.substring(4, 6));
+
+			ycoord = ycoord- 1;
+
+			if(xcoord < 10){
+				ret = input.substring(0, 2) + "0" + xcoord;
+			}
+			else {
+				ret = input.substring(0, 2) + xcoord;
+			}
+			if(ycoord < 10) {
+				ret = ret + "0" + ycoord;
+			}
+			else {
+				ret = ret + ycoord;
+			}
+		}
+		return ret;
+	}
+
+
+	// start on psc animate
+	private static void healthDraw() {
+		Graphics g = appFrame.getGraphics();
+		Graphics g2D = g;
+
+		int leftscale = 10;
+		int leftoffset = 10;
+		int rightoffset = 9;
+		int interioroffset = 2;
+		int halfinterioroffset  = 1;
+
+		for (int i = 0; i < p1.getMaxLife(); i++) {
+			if (i % 2 == 0) {
+				g2D.drawImage(rotateImageObject(p1).filter(leftHeartOutline, null), leftscale * i + leftoffset + XOFFSET, YOFFSET, null);
+			}
+			else {
+				g2D.drawImage(rotateObject(p1).filter(rightHeartOutline, null), leftscale * i + rightoffet + XOFFSET, YOFFSET, null);
 			}
 		}
 
-		public static void enemiesDraw() {
+		for (int i = 0; i < p1.getMaxLife(); i++) {
+			if (i % 2 == 0) {
+				g2D . drawImage ( rotateImageObject(p1).filter(leftHeart, null), leftscale * i + leftoffset + interioroffset + XOFFSET, interioroffset + YOFFSET, null ) ;
+			}
+			else {
+				g2D.drawImage(rotateImageObject(p1).filter(rightHeart,null), leftscale * i + leftoffset - halfinterioroffset +
+						XOFFSET, interioroffset + YOFFSET, null ) ;
+			}
+		}
+	}
 
-			Graphics g = appFrame.getGraphics();
-			Graphics g2D = g;
+	public static void enemiesDraw() {
 
-			for (int i = 0; i < bluepigEnemies.size(); i++) {
-				if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - 0.0) < 1.0 ) {
-					if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2 ) {
-						g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(6), null ), (int)(bluepigEnemies.elementAt(i).getX() + 0.5 ), (int)(bluepigEnemies.elementAt(i).getY() + 0.5) , null);
-					}
-					else {
-						g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(7), null), (int)(bluepigEnemies.elementAt(i).get() + 0.5), (int)(bluepigEnemies.elementAt(i).getY() + 0.5), null);
-					}
-					bluepigEnemies.elementAt(i).updateCurrentFrame();
+		Graphics g = appFrame.getGraphics();
+		Graphics g2D = g;
+
+		for (int i = 0; i < bluepigEnemies.size(); i++) {
+			if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - 0.0) < 1.0 ) {
+				if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2 ) {
+					g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(6), null ), (int)(bluepigEnemies.elementAt(i).getX() + 0.5 ), (int)(bluepigEnemies.elementAt(i).getY() + 0.5) , null);
 				}
-				if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - pi) < 1.0) {
-					if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2) {
-						g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(4), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5), (int)(bluepigEnemies.elementAt(i).getY() + 0.5 ), null );
-					}
-					else {
-						g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(5), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5) , (int)(bluepigEnemies.elementAt(i).getY() + 0.5), null );
-					}
-					bluepigEnemies.elementAt(i).updateCurrentFrame();
+				else {
+					g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(7), null), (int)(bluepigEnemies.elementAt(i).get() + 0.5), (int)(bluepigEnemies.elementAt(i).getY() + 0.5), null);
 				}
-				if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - halfPi) < 1.0) {
-					if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2 ) {
-						g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(2), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5), (int)(bluepigEnemies.elementAt(i).getY() + 0.5 ), null );
-					}
-					else {
-						g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(3), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5) , (int)(bluepigEnemies.elementAt(i).getY() + 0.5), null );
-					}
-					bluepigEnemies.elementAt(i).updateCurrentFrame();
+				bluepigEnemies.elementAt(i).updateCurrentFrame();
+			}
+			if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - pi) < 1.0) {
+				if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2) {
+					g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(4), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5), (int)(bluepigEnemies.elementAt(i).getY() + 0.5 ), null );
 				}
+				else {
+					g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(5), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5) , (int)(bluepigEnemies.elementAt(i).getY() + 0.5), null );
+				}
+				bluepigEnemies.elementAt(i).updateCurrentFrame();
+			}
+			if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - halfPi) < 1.0) {
+				if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2 ) {
+					g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(2), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5), (int)(bluepigEnemies.elementAt(i).getY() + 0.5 ), null );
+				}
+				else {
+					g2D.drawImage(rotateImageObject(bluepigEnemies.elementAt(i)).filter(bluepigEnemy.elementAt(3), null), (int)(bluepigEnemies.elementAt(i).getX() + 0.5) , (int)(bluepigEnemies.elementAt(i).getY() + 0.5), null );
+				}
+				bluepigEnemies.elementAt(i).updateCurrentFrame();
 			}
 			if (Math.abs(bluepigEnemies.elementAt(i).getInternalAngle() - threehalvesPi) < 1.0) {
 				if (bluepigEnemies.elementAt(i).getCurrentFrame() < bluepigEnemies.elementAt(i).getMaxFrames() / 2 ) {
@@ -725,5 +644,378 @@ public class Zelda {
 		return ret;
 	}
 
+	public static class ImageObject {
+		public ImageObject() {
+			maxFrames = 1;
+			currentFrame = 0;
+			bounce = false;
+			life = 1;
+			dropLife = 0;
+		}
 
+		public ImageObject(double xinput, double yinput, double xwidthinput, double yheightinput, double angleinput) {
+			this();
+			x = xinput;
+			y = yinput;
+			lastposx = x;
+			lastposy = y;
+			xwidth = xwidthinput;
+			yheight = yheightinput;
+			angle = angleinput;
+			internalangle = 0.0;
+			coords = new Vector<Double>();
+		}
+
+		public double getX() {
+			return x;
+		}
+
+		public double getY() {
+			return y;
+		}
+
+		public double getlastposx() {
+			return getlastposx;
+		}
+
+		public double getlastposy() {
+			return getlastposy;
+		}
+
+		public void setlastposx(double input) {
+			lastposx = input;
+		}
+
+		public void setlastposy(double input) {
+			lastposy = input;
+		}
+
+		public double getWidth() {
+			return xwidth;
+		}
+
+		public double getHeight() {
+			return yheight;
+		}
+
+		public double getAngle() {
+			return angle;
+		}
+
+		public void setAngle(double angleinput) {
+			angle = angleinput;
+		}
+
+		public double getInternalAngle() {
+			return internalangle;
+		}
+
+		public void setInternalAngle(double internalangleinput) {
+			internalangle = internalangleinput;
+		}
+
+		public Vector<Double> getCoords() {
+			return coords;
+		}
+
+		public void setCoords(Vector<Double> coordsinput) {
+			coords = coordsinput;
+			generateTriangles();
+			//print Triangles();
+		}
+
+		public int getMaxFrames() {
+			return maxFrames;
+		}
+
+		public void setMaxFrames(int input) {
+			maxFrames = input;
+		}
+
+		public int getCurrentFrame() {
+			return currentFrame;
+		}
+
+		public void setCurrentFrame(int input) {
+			currentFrame = input;
+		}
+
+		public Boolean getBounce() {
+			return bounce;
+		}
+
+		public void setBounce(Boolean input) {
+			bounce = input;
+		}
+
+		public int getLife() {
+			return life;
+		}
+
+		public void setLife(int input) {
+			life = input;
+		}
+
+		public int getMaxLife() {
+			return maxLife;
+		}
+
+		public void setMaxLife(int input) {
+			maxLife = input;
+		}
+
+		public int getDropLife() {
+			return dropLife;
+		}
+
+		public void setDropLife(int input) {
+			dropLife = input;
+		}
+
+		public void updateBounce() {
+			if(getBounce()) {
+				moveto(getlastposx()m getlastposy());
+			} else {
+				setlastposx(getX());
+				setlastposy(getY());
+			}
+			setBounce(false);
+		}
+
+		public void updateCurrentFrame() {
+			currentFrame = (currentFrame + 1) % maxFrames;
+		}
+
+		public void generateTriangles() {
+			triangles = new Vector<Double>();
+			//format: (0, 1), (2, 3), (4, 5) is the (x, y) coords of a triangle
+
+			//get center point of all coordinates
+			comX = getComX();
+			comY = getComY();
+
+			for(int i = 0; i < coords.size(); i = i + 2) {
+				triangles.addElement(coords.elementAt(i));
+				triangles.addElement(coords.elementAt(i + 1));
+
+				triangles.addElement(coords.elementAt((i + 2) % coords.size()));
+				triangles.addElement(coords.elementAt((i + 3) % coords.size()));
+
+				triangles.addElement(comX);
+				triangles.addElement(comY);
+			}
+		}
+
+		public void printTriangles() {
+			for(int i = 0; i < triangles.size(); i = i + 6) {
+				System.out.print("p0x: " + triangles.elementAt(i) + ", p0y: " + triangles.elementAt(i + 1));
+				System.out.print("p1x: " + triangles.elementAt(i + 2) + ", p1y: " + triangles.elementAt(i + 3));
+				System.out.print("p2x: " + triangles.elementAt(i + 4) + ", p2y: " + triangles.elementAt(i + 5));
+			}
+		}
+
+		public double getComX() {
+			double ret = 0;
+			if(coords.size() > 0) {
+				for(int i = 0; i < coords.size(); i = i + 2) {
+					ret = ret + coords.elementAt(i);
+				}
+				ret = ret / (coords.size() / 2.0);
+			}
+			return ret;
+		}
+
+		public double getComy() {
+			double ret = 0;
+			if(coords.size() > 0) {
+				for(int i = 1; i < coords.size(); i = i + 2) {
+					ret = ret + coords.elementAt(i);
+				}
+				ret = ret / (coords.size() / 2.0);
+			}
+			return ret;
+		}
+
+		public void move(double xinput, double yinput) {
+			x = x + xinput;
+			y = y + yinput;
+		}
+
+		public void moveto(double xinput, double yinput) {
+			x = xinput;
+			y = yinput;
+		}
+
+		public int screenWrap(double leftEdge, double rightEdge, double topEdge, double bottomEdge) {
+			int ret = 0;
+			if(x > rightEdge) {
+				moveto(leftEdge, getY());
+				ret = 1;
+			}
+
+			if(x < leftEdge) {
+				moveto(rightEdge, getY());
+				ret = 2;
+			}
+
+			if(y > bottomEdge) {
+				moveto(getX(), topEdge);
+				ret = 3;
+			}
+
+			if(y < topEdge) {
+				moveto(getX(), bottomEdge);
+				ret = 4;
+			}
+			return ret;
+		}
+
+		public void rotate(double angleinput) {
+			angle = angle + angleinput;
+			while(angle > twoPi) {
+				angle = angle - twoPi;
+			}
+
+			while(angle < 0) {
+				angle = angle + twoPi;
+			}
+		}
+
+		public void spin(double internalangleinput) {
+			internalangle = internalangle + internalangleinput;
+			while(internalangle > twoPi) {
+				internalangle = internalangle - twoPi;
+			}
+
+			while(internalangle < 0) {
+				internalangle = internalangle + twoPi;
+			}
+		}
+
+		private double x;
+		private double y;
+		private double lastposx;
+		private double lastposy;
+		private double xwidth;
+		private double yheight;
+		private double angle; //in Radians
+		private double internalangle; //in Radians
+		private Vector<Double> coords;
+		private Vector<Double> triangles;
+		private double comX;
+		private double comY;
+
+		private int maxFrames;
+		private int currentFrame;
+
+		private int life;
+		private int maxLife'
+		private int dropLife;
+
+		private Boolean bounce;
+	}
+
+	private static void bindKey(JPanel mypanel, String input) {
+		myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("pressed " + input), input + " pressed");
+		myPanel.getActionMap().put(input + " pressed", new KeyPressed(input));
+
+		myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("released " + input), input + " released");
+		myPanel.getActionMap().put(input + " released", new KeyaReleased(input));
+	}
+
+	public static void main(String[] args) {
+		setup();
+		appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		appFrame.setSize(WINWIDTH + 1, WINHEIGHT + 85);
+
+		JPanel myPanel = new JPanel();
+
+		JButton quitButton = new JButton("Select");
+		quitButton.addActionListener(new QuitGame());
+		myPanel.add(quitButton);
+
+		JButton newGameButton = new JButton("Start");
+		newGameButton.addActionListener(new Startgame());
+		myPanel.add(newGameButton);
+
+		bindKey(myPanel, "UP");
+		bindKey(myPanel, "DOWN");
+		bindKey(myPanel, "LEFT");
+		bindKey(myPanel, "RIGHT");
+		bindKey(myPanel, "F");
+
+		appFrame.getContentPanel().add(myPanel, "South");
+		appFrame.setVisible(true);
+	}
+
+	private static Boolean endgame;
+
+	private static Vector<Vector<BufferedImage>> backgroundKI;
+	private static Vector<Vector<BufferedImage>> backgroundTC;
+
+	private static Vector<Vector<Vector<ImageObject>>> wallsKI;
+	private static Vector<Vector<Vector<ImageObject>>> wallsTC;
+
+	private static int xdimKI;
+	private static int ydimKI;
+	private static int xdimTC;
+	private static int ydimTC;
+
+	private static BufferedImage player;
+	private static Vector<BufferedImage> link;
+	private static BufferedImage leftHeartOutline;
+	private static BufferedImage rightHeartOutline;
+	private static BufferedImage leftHeart;
+	private static BufferedImage rightHeart;
+	private static Vector<BufferedImage> bluepigEnemy;
+	private static Vector<ImageObject> bluepigEnemies;
+	private static Vector<ImageObject> bubblebossEnemies;
+
+	private static ImageObject doorKItoTC;
+	private static ImageObject doorTCtoKI;
+
+	private static Boolean upPressed;
+	private static Boolean downPressed;
+	private static Boolean leftPressed;
+	private static Boolean rightPressed;
+	private static Boolean aPressed;
+	private static Boolean xPressed;
+	private static double lastPressed;
+
+	private static ImageObject p1;
+	private static double p1width;
+	private static double p1height;
+	private static double p1originalX;
+	private static double p1originalY;
+	private static double p1velocity;
+
+	private static int level;
+
+	private static Long audiolifetime;
+	private static Long lastAudioStart;
+	private static Clip clip;
+
+	private static Long dropLifeLifetime;
+	private static Long lastDropLife;
+
+	private static int XOFFSET;
+	private static int YOFFSET;
+	private static int WINWIDTH;
+	private static int WINHEIGHT;
+
+	private static double pi;
+	private static double quarterPi;
+	private static double halfPi;
+	private static double threequartersPi;
+	private static double fivequartersPi;
+	private static double threehalvesPi;
+	private static double sevenquartersPi;
+	private static double twoPi;
+
+	private static JFrame appFrame;
+	private static String backgroundState;
+
+	private static Boolean availableToDropLife;
+
+	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 }
