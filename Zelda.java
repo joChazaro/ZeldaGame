@@ -60,7 +60,7 @@ public class Zelda {
 			for(int i =0; i < ydimKI; i++) {
 				Vector<BufferedImage> temp = new Vector<BufferedImage> ();
 				for(int j = 0; j < xdimKI; j++){
-					BufferedImage tempImg = ImageIO.read(new File("blank.png"));
+					BufferedImage tempImg = ImageIO.read(new File("../media/blank.png"));
 					temp.addElement(tempImg);
 				}
 				backgroundKI.addElement(temp);
@@ -104,15 +104,15 @@ public class Zelda {
 						wallsKI.elementAt(i).elementAt(j).addElement(new ImageObject( 135, 270, 200, 35, 0.0));
 					}
 					if(i == 8 && j == 9){ //PAGE 112
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 35 , 135, 35 , 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 100, 70 , 35 , 140, 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 35 , 135, 35 , 100, 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 170, 35 , 70 , 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 235, 35 , 70 , 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 270, 135, 35 , 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 170, 270, 135, 35 , 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 300, 35 , 35 , 270, 0.0 ) ) ;
-						wallsKI. elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 235, 35 , 70 , 35 , 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 35 , 135, 35 , 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 100, 70 , 35 , 140, 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 35 , 135, 35 , 100, 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 170, 35 , 70 , 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 235, 35 , 70 , 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 0 , 270, 135, 35 , 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 170, 270, 135, 35 , 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 300, 35 , 35 , 270, 0.0 ) ) ;
+						wallsKI.elementAt ( i ).elementAt ( j ).addElement ( new ImageObject ( 235, 35 , 70 , 35 , 0.0 ) ) ;
 
 					}
 				}
@@ -124,7 +124,7 @@ public class Zelda {
 			for(int i = 0; i < ydimTC; i++) {
 				Vector<BufferedImage> temp = new Vector <BufferedImage>();
 				for(int j = 0; j < xdimTC; j++) {
-					BufferedImage tempImg = ImageIO.read(new File("blank.png"));
+					BufferedImage tempImg = ImageIO.read(new File("../media/blank.png"));
 					temp.addElement(tempImg);
 				}
 				backgroundTC.addElement(temp);
@@ -168,7 +168,7 @@ public class Zelda {
 				}
 				wallsTC.add(temp);
 			}
-			player = ImageIO.read(new File("link00.png"));
+			player = ImageIO.read(new File("../media/link00.png"));
 			//links images
 			link = new Vector<BufferedImage>();
 			for(int i = 0; i < 72; i++){
@@ -184,22 +184,22 @@ public class Zelda {
 			//bluepig enemy images
 			bluepigEnemies = new Vector <ImageObject>();
 			bluepigEnemy = new Vector <BufferedImage>();
-			bluepigEnemy.addElement(ImageIO.read(new File("BPB1.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPB2.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPF1.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPF2.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPL1.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPL2.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPR1.png")));
-			bluepigEnemy.addElement(ImageIO.read(new File("BPR2.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPB1.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPB2.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPF1.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPF2.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPL1.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPL2.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPR1.png")));
+			bluepigEnemy.addElement(ImageIO.read(new File("../media/BPR2.png")));
 
 			//BubbleBoss Enemies
 			bubblebossEnemies = new Vector<ImageObject>();
 			//Health Images
-			leftHeartOutline = ImageIO.read(new File("heartOutlineLeft.png"));
-			rightHeartOutline = ImageIO.read(new File("heartOutlineRight.png"));
-			rightHeart = ImageIO.read(new File("heartRight.png"));
-			leftHeart = ImageIO.read(new File("heartLeft.png"));
+			leftHeartOutline = ImageIO.read(new File("../media/heartOutlineLeft.png"));
+			rightHeartOutline = ImageIO.read(new File("../media/heartOutlineRight.png"));
+			rightHeart = ImageIO.read(new File("../media/heartRight.png"));
+			leftHeart = ImageIO.read(new File("../media/heartLeft.png"));
 
 		}
 		catch (IOException ioe) {
@@ -245,7 +245,7 @@ private static class AudioLooper implements Runnable{
 		}
 		try{
 			if(backgroundState.startsWith("KI")){
-				AudioInputStream ais = AudioSystem.getAudioInputStream(new File("KI.wav").getAbsoluteFile());
+				AudioInputStream ais = AudioSystem.getAudioInputStream(new File("../media/KI.wav").getAbsoluteFile());
 				clip = AudioSystem.getClip();
 				clip.open(ais);
 				clip.start();
@@ -253,7 +253,7 @@ private static class AudioLooper implements Runnable{
 
 			}
 			else if(backgroundState.startsWith("TC")) {
-				AudioInputStream ais = AudioSystem.getAudioInputStream(new File("TC.wav").getAbsoluteFile());
+				AudioInputStream ais = AudioSystem.getAudioInputStream(new File("../media/TC.wav").getAbsoluteFile());
 				clip = AudioSystem.getClip();
 				clip.open(ais);
 				clip.start();
@@ -355,7 +355,7 @@ private static class AudioLooper implements Runnable{
 
 		for (int i = 0; i < p1.getMaxLife(); i++) {
 			if (i % 2 == 0) {
-				g2D . drawImage ( rotateImageObject(p1).filter(leftHeart, null), leftscale * i + leftoffset + interioroffset + XOFFSET, interioroffset + YOFFSET, null ) ;
+				g2D .drawImage ( rotateImageObject(p1).filter(leftHeart, null), leftscale * i + leftoffset + interioroffset + XOFFSET, interioroffset + YOFFSET, null ) ;
 			}
 			else {
 				g2D.drawImage(rotateImageObject(p1).filter(rightHeart,null), leftscale * i + leftoffset - halfinterioroffset +
